@@ -1,0 +1,64 @@
+[package]
+name = "cyberkernel"
+version = "0.1.0"
+edition = "2021"
+authors = ["CyberCore Contributors"]
+description = "CyberCore AIOS — Rust microkernel (Control Plane)"
+repository = "https://github.com/CasperHK/CyberCore"
+license = "MIT OR Apache-2.0"
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Build target: bare-metal x86_64 or aarch64 (select via .cargo/config.toml).
+# For host builds / testing, std is enabled via the `std` feature flag.
+# ──────────────────────────────────────────────────────────────────────────────
+
+[lib]
+name = "cyberkernel"
+crate-type = ["staticlib", "rlib"]
+
+[features]
+default = []
+# Enable when building for a hosted test environment
+std = []
+# Emit verbose TVDP trace logs (debug builds only)
+tvdp-trace = []
+
+[dependencies]
+# ── no_std spin-lock primitives ───────────────────────────────────────────────
+spin = "0.9"
+
+# ── volatile memory access (MMIO registers, shared DMA buffers) ───────────────
+volatile = "0.5"
+
+# ── bitflags for capability / permission bitmasks ────────────────────────────
+bitflags = "2"
+
+# ── static assertions checked at compile time ────────────────────────────────
+static_assertions = "1"
+
+# ── Tiny hash map that works in no_std (used for capability tables) ───────────
+hashbrown = { version = "0.14", default-features = false, features = ["ahash"] }
+
+# ── Optional: x86_64 hardware primitives (CPUID, MSR, paging structures) ─────
+# Uncomment for x86_64 targets:
+# x86_64 = { version = "0.15", default-features = false }
+
+# ── Optional: AArch64 hardware primitives ────────────────────────────────────
+# Uncomment for AArch64 targets:
+# aarch64-cpu = { version = "0.3", default-features = false }
+
+# ── Optional: UEFI / bootloader integration ──────────────────────────────────
+# bootloader = { version = "0.11", features = ["map-physical-memory"] }
+
+# ── Optional: ACPI table parsing (for IOMMU / DMAR discovery) ────────────────
+# acpi = { version = "5", default-features = false }
+
+# ── Optional: RDMA / SmartNIC driver bindings (future) ───────────────────────
+# rdma-sys = { version = "0.3", optional = true }
+
+# ── Optional: Trusted Execution Environment (TEE) crypto primitives ───────────
+# sha2 = { version = "0.10", default-features = false }
+
+[dev-dependencies]
+# Host-side integration tests use std
+# (tests in tests/ automatically get std linkage from the test harness)

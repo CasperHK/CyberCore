@@ -1,0 +1,20 @@
+# CyberCore AIOS — Cargo build configuration
+#
+# Uncomment the target block that matches your hardware.
+# For host-side development and testing, no target override is needed:
+#   cargo test --features std
+
+# ── x86_64 bare-metal target ───────────────────────────────────────────────────
+# [build]
+# target = "x86_64-unknown-none"
+
+# ── AArch64 bare-metal target ──────────────────────────────────────────────────
+# [build]
+# target = "aarch64-unknown-none"
+
+# ── Linker flags for bare-metal (adjust for your boot shim) ───────────────────
+# [target.x86_64-unknown-none]
+# rustflags = ["-C", "link-arg=-Tlink.ld"]
+
+# [target.aarch64-unknown-none]
+# rustflags = ["-C", "link-arg=-Tlink.ld"]
